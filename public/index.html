@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Sockets21</title>
+    <script src="/socket.io-client\dist/socket.io.js"></script>
+    <script src="./js/main.js"></script>
+</head>
+  <body onload="joinGame()">
+    <div>
+        Username: <input type="text" id="user">
+        <br><br>
+        <button id="conbtn">Join game</button>
+        <button id="drawbtn" onclick="drawCard()">Draw card</button>
+        <button id='passbtn' onclick="pass()">Pass</button>
+    </div>
+      <div id="gameLog" ></div>
+  </body>
+</html>
