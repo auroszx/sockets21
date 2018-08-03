@@ -5,14 +5,26 @@
     <script src="/socket.io-client\dist/socket.io.js"></script>
     <script src="./js/main.js"></script>
 </head>
-  <body onload="joinGame()">
-    <div>
-        Username: <input type="text" id="user">
+  <body>
+    <div id="game" style="position: relative; float: right; width: 60%; min-height: 600px; border-style: solid; display: inline-block;">
+      <!-- Cards and other things will display here -->
+      <div id="enemyhand" style="min-height: 120px;"></div>
+      <span id="wins"></span>
+      <div id="deck" style="display: block;" onclick="drawFromDeck()"></div>
+      <div id="playerhand" style="min-height: 120px; margin-top: 50%"></div>
+    </div>
+    <div id="gameLog" style="overflow: auto; width:30%; min-height: 500px; max-height: 500px; border-style: solid;"><p>Welcome to the game!</p></div>
+
+    <div id="buttons" style="position: absolute; padding-top: 5%">
+        Player name: <input type="text" id="player">
         <br><br>
         <button id="conbtn">Join game</button>
         <button id="drawbtn" onclick="drawCard()">Draw card</button>
         <button id='passbtn' onclick="pass()">Pass</button>
+        <button id='clearbtn' onclick="clearLog()">Clear</button>
     </div>
-      <div id="gameLog" ></div>
+
+    <script>renderDeck();</script>
+
   </body>
 </html>
