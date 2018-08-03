@@ -90,6 +90,10 @@ function clearLog() {
     }
 }
 
+function setPlayer() {
+    $("player").disabled = true;
+}
+
 function handReset() {
     while ($("playerhand").firstChild) {
         $("playerhand").removeChild($("playerhand").firstChild);

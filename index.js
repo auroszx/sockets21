@@ -57,8 +57,36 @@ function getRandomCard() {
 	//return deck.splice(Math.floor((Math.random() * deck.length) + 1), 1);
 }
 
+function softResetGame() {
+	wins[0].score = 0;
+	wins[1].score = 0;
 
-generateCardDeck();
+	hands = [];
+	generateCardDeck();
+	io.emit("handReset");
+	io.emit("turnLock", false);
+}
+
+function resetGame() {
+	wins = [
+	{
+		player: "",
+		score: 0,
+		total: 0
+	},
+	{
+		player: "",
+		score: 0,
+		total: 0
+	}
+	];
+
+	hands = [];
+	generateCardDeck();
+	io.emit("handReset");
+	io.emit("turnLock", false);
+}
+
 
 const server = app.listen(config.port);
 const io = require('socket.io').listen(server);
@@ -70,7 +98,7 @@ io.sockets.on('connection', function(socket) {
 	socket.emit("gameLog", "You joined the game");
 	socket.broadcast.emit('gameLog', "Player joined");
 	socket.emit("gameLog", "There are "+players+" connected players");
-	generateCardDeck();
+	resetGame();
 
 	//Game stuff
 
@@ -114,11 +142,18 @@ io.sockets.on('connection', function(socket) {
       			}
       		}
 
-      		if (wins[0].score > wins[1].score && wins[0].score <= 21) {
+      		if (wins[0].score > wins[1].score && wins[0].score <= 21 || (wins[0].score < wins[1].score && wins[1].score >= 21)) {
+      			io.emit("gameLog", wins[0].player+" wins this round with "+wins[0].score);
+      			io.emit("gameLog", wins[1].player+" loses this round with "+wins[1].score);
       			wins[0].total++;
       		}
-      		else if (wins[0].score < wins[1].score && wins[1].score <= 21) {
+      		else if ((wins[0].score < wins[1].score && wins[1].score <= 21) || (wins[0].score > wins[1].score && wins[0].score >= 21)) {
+      			io.emit("gameLog", wins[1].player+" wins this round with "+wins[1].score);
+      			io.emit("gameLog", wins[0].player+" loses this round with "+wins[0].score);
       			wins[1].total++;
+      		}
+      		else {
+      			io.emit("gameLog", "Nobody wins this round...");
       		}
 
       		if (wins[0].total == 3 || wins[1].total == 3) {
@@ -132,10 +167,10 @@ io.sockets.on('connection', function(socket) {
       			io.emit("gameOver", wins[0].player+": "+wins[0].total+" | "+wins[1].player+": "+wins[1].total+"\nThe winner is: "+winner);
       		}
 
-      		wins[0].score = 0;
-      		wins[1].score = 0;
-
       		console.log(wins);
+
+      		softResetGame();
+
       		io.emit("gameStats", wins);
       		passes = 0;
       	}
