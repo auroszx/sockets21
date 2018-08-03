@@ -6,12 +6,12 @@ Card assets came from here: https://github.com/hayeah/playing-cards-assets
 
 To setup the project run:
 
-``shell
+``
 npm install
 ``
 
 Then run it with:
 
-``shell
+``
 node index.js
 ``
